@@ -32,5 +32,5 @@ Before you start:
 - Allow multiple delimiters like this:  “//[delim1][delim2]\n” for example “//[*][%]\n1*2%3” should return 6.
 - make sure you can also handle multiple delimiters with length longer than one char
 
-[roy]:[http://osherove.com/tdd-kata-1/]
-[fk]:[http://functionalkats.tumblr.com/] 
+[roy]:http://osherove.com/tdd-kata-1/
+[fk]:http://functionalkats.tumblr.com/
