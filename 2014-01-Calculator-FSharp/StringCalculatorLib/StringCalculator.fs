@@ -1,13 +1,32 @@
 ﻿module StringCalculator
 
 open System
+open System.Text.RegularExpressions
 
 let Add (arg:string) =
+    let Matches pattern s =
+        Regex(pattern).Matches(s)
+        |> Seq.cast<Match>
+        |> Seq.map (fun m -> m.Value)
+        
+    let ParseDelimiters (s:string) =
+        let parsed = 
+            Matches "(?<=\[)[^]]+(?=])" s
+            |> Array.ofSeq
+
+        match parsed with
+        | [||] -> [|s|]
+        | _ -> parsed
+        
+    let SplitCustomDelimiter (s:string) =
+        let pos = s.IndexOf("\n")
+        s.Substring(0, pos) |> ParseDelimiters, s.Substring(pos)
+        
     let (|CustomDelimiter|) (s:string) =
         if s.StartsWith("//") then
-            ([| s.Substring(2, s.IndexOf("\n")-2) |], s.Substring(s.IndexOf("\n")))
+            s.Substring(2) |> SplitCustomDelimiter
         else
-            ([| ","; "\n" |], s)
+            [| ","; "\n" |], s
 
     let parse s =
         match s with
