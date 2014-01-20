@@ -97,9 +97,21 @@
         }
 
         [TestMethod]
-        public void MultipeCharacterDelimiter()
+        public void MultipleCharacterDelimiter()
         {
             Assert.AreEqual(7, StringCalculator.Add("//***\n2***1***4"));
+        }
+
+        [TestMethod]
+        public void MultipleCustomDelimiters()
+        {
+            Assert.AreEqual(6, StringCalculator.Add("//[*][%]\n1*2%3"));
+        }
+
+        [TestMethod]
+        public void MultipleCustomDelimitersMultipleChars()
+        {
+            Assert.AreEqual(8, StringCalculator.Add("//[***][--]\n1***2--5"));
         }
     }
 }
