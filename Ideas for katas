@@ -8,3 +8,5 @@ Ideas
 & accept input from the command-line; or create a web-based version; or any other UI.
 
 - Implement a Sudoku solver
+
+- Some good suggestions here; perhaps we could get the topic in advance, so we can set up the framework and only have to write core code on the night
