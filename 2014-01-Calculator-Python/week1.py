@@ -14,10 +14,12 @@ numbers are negative an exception is raised.
 
 
 def add(string):
-  numbers = map(int, filter(lambda s: len(s) > 0,
+  numbers = filter(lambda s: s < 1001,
+                     map(int, filter(lambda s: len(s) > 0,
                         re.split('-?[^-0-9]', string)
+                                    )
                         )
-                )
+                  )
 
   if len(filter(lambda i: i < 0, numbers)) > 0:
     raise Exception, "Negatives not allowed"
@@ -45,6 +47,10 @@ class TestAddFunction(unittest.TestCase):
 
   def test_negatives(self):
     self.assertRaises(Exception, add, "1,2,-4")
+
+  def test_thousand(self):
+    self.assertEqual(20, add("1,2,3,4,10,1001"))
+    self.assertEqual(1020, add("1,2,3,4,10,1000"))
 
 
 suite = unittest.TestLoader().loadTestsFromTestCase(TestAddFunction)
