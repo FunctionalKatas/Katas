@@ -5,6 +5,8 @@
 let main argv = 
     //printfn "%A" argv
 
+    let sw = System.Diagnostics.Stopwatch.StartNew ()
+
     let sieve max =
         let notPrime : bool array = Array.zeroCreate (max + 1)
 
@@ -37,6 +39,9 @@ let main argv =
     |> Seq.skip 43
     |> Seq.take 5
     |> Seq.iteri (fun i x -> printfn "%d %A" i x)
+
+
+    printfn "%A" sw.Elapsed
 
     System.Console.ReadKey true |> ignore
 
