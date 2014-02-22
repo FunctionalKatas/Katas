@@ -1,7 +1,6 @@
-{-# Language FlexibleContexts #-}
 
-import Data.Array.ST -- (newArray, readArray, writeArray, runSTUArray)
-import Data.Array.Unboxed -- (UArray, assocs)
+import Data.Array.ST  (newArray, readArray, writeArray, runSTUArray, STUArray)
+import Data.Array.Unboxed  (UArray, assocs)
 import Control.Monad
 import Control.Monad.ST (ST)
 
@@ -14,7 +13,6 @@ sieve top = runSTUArray $ do
 
 fullsieve :: Int -> ST s (STUArray s Int Bool)
 fullsieve top = newArray (1,top) True
-
 
 -- 'strike out' multiples of i in the sieve array
 sieveOut  :: STUArray s Int Bool -> Int -> Int -> ST s (STUArray s Int Bool)
