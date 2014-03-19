@@ -5,7 +5,7 @@ open NUnit.Framework
 open StringCalc
 
     type StringCalcTests() =
-        
+
         [<Test>]
         member x.EmptyString() =
             Assert.AreEqual(0, Add "")
@@ -34,9 +34,9 @@ open StringCalc
         member x.PreventNegatives() =
             try
                 Add "1,-2,3,-4" |> ignore
-                Assert.Fail "Didn't catch the negatives"
+                Assert.Fail "Didn't Catch The Negatives"
             with
-                | NegativesFound negatives -> Assert.AreEqual([|-2;-4|], negatives)
+                NegativesFound negatives -> Assert.AreEqual([|-2;-4|], negatives)
 
         [<Test>]
         member x.IgnoreNumbersAbove1000() =
@@ -49,3 +49,11 @@ open StringCalc
         [<Test>]
         member x.MultipleCustomDelimiters() =
             Assert.AreEqual(6, Add "//[:][|]\n1:2|3")
+
+        [<Test>]
+        member x.MultiCharacterCustomDelimiters() =
+            Assert.AreEqual(6, Add "//[AA][BBB]\n1AA2BBB3")
+
+        [<Test>]
+        member x.DefaultDelimitersWorkWithCustomDelimiters() =
+            Assert.AreEqual(6, Add "//[:][|]\n1:2|,3")
