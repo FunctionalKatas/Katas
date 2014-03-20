@@ -12,8 +12,8 @@
         
     let ParseDelimiters (expr: string) =
         let parts = expr.Split([|'\n'|], 2)
-        let delimiters = parts.[0].Split([|"/";"[";"]"|], StringSplitOptions.RemoveEmptyEntries)
-        (delimiters, parts.[1])
+        let customDelimiters = parts.[0].Split([|"/";"[";"]"|], StringSplitOptions.RemoveEmptyEntries)
+        (Array.append DefaultDelimiters customDelimiters, parts.[1])
 
     let Parse (expr: string) =
         match expr with
@@ -21,7 +21,7 @@
         | _ -> (DefaultDelimiters, expr)
 
     let Split (expr: string[] * string) =
-        let (delimiters, numbers) = expr
+        let delimiters, numbers = expr
         numbers.Split (delimiters, StringSplitOptions.RemoveEmptyEntries)
         |> Array.map Int32.Parse
 
