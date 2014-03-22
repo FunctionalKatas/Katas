@@ -27,4 +27,6 @@
 
     let Filter = PreventNegatives >> Array.filter (fun n -> n <= 1000)
     
-    let Add = Parse >> Split >> Filter >> Array.sum
+    let Sum = Array.sum
+
+    let Add = Parse >> Split >> Filter >> Sum
