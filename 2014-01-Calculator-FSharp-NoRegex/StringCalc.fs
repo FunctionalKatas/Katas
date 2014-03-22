@@ -25,9 +25,6 @@
         numbers.Split (delimiters, StringSplitOptions.RemoveEmptyEntries)
         |> Array.map Int32.Parse
 
-    let Filter numbers =
-        numbers
-        |> PreventNegatives
-        |> Array.filter (fun n -> n <= 1000)
-
-    let Add expr = expr |> Parse |> Split |> Filter |> Array.sum
+    let Filter = PreventNegatives >> Array.filter (fun n -> n <= 1000)
+    
+    let Add = Parse >> Split >> Filter >> Array.sum
