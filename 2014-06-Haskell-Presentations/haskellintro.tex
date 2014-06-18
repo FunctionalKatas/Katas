@@ -1,0 +1,150 @@
+\documentclass{beamer}
+
+\mode<presentation> {
+\usetheme{Madrid}
+\setbeamertemplate{navigation symbols}{}
+}
+
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage[T1]{fontenc}
+\usepackage{minted}
+\usepackage{upquote}
+\AtBeginDocument{
+\def\PYZsq{\textquotesingle}
+}
+
+\title[Haskell Intro]{Haskell Introduction}
+
+\author{Jean-Pierre Rupp}
+\institute[Haskoin]
+{
+Haskoin Limited \\
+\medskip
+\textit{root@haskoin.com}
+}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}
+\frametitle{Haskell Qualities}
+\begin{itemize}
+\item Referential transparency
+\item Lazy evaluation
+\item Type inference
+\item Immutable data structures
+\item Pattern Matching
+\item Property testing
+\item Made by really smart people (with PhDs)
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Functions \& Lists}
+\begin{minted}{haskell}
+-- Functions
+square x = x * x
+
+-- Lists
+smallNums = [1,2,3,4]
+oneMillion = [1..1000000]
+nats = [1..]
+helloWorld = "hello world!"
+abc = 'a':'b':'c':[]
+\end{minted}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Currying}
+\begin{minted}{haskell}
+-- Functions with multiple parameters
+prod x y = x * y
+
+-- Partially-applied functions
+multBy4 = prod 4
+addOne = (+1)
+prodShort = (*)
+square = (^2)
+
+-- Anonymous functions
+addTwo = \x -> x + 2
+\end{minted}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{First-Class Functions}
+\begin{minted}{haskell}
+-- Apply a function to all elements in list
+map (+1) [1..10]         -- Add one
+take 5 (map (^2) [1..])  -- Take five squared integers
+
+-- Other list operations
+sort "daynet"            -- "adenty"
+filter (>10) [5..15]     -- [11,12,13,14,15]
+concat ["ad","en","ty"]  -- "adenty"
+\end{minted}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Types}
+\begin{minted}{haskell}
+-- Simple type
+data Soca = OneCent | FiveCent | TenCent | Dollar
+
+-- Polymorphic parametrized algebraic data type
+data List a = Nil | Cons a (List a)
+Cons 'a' (Cons 'b' (Cons 'c' Nil))   -- Equivalent to "abc"
+
+-- Type alias (and some pattern matching)
+type Complex = (Double, Double)
+cpxProd :: Complex -> Complex -> Complex
+cpxProd (a,b) (c,d) = ((a*c-b*d),(b*c+a*d))
+\end{minted}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Parametrized Types}
+\begin{minted}{haskell}
+-- Find smallest
+data Soca = OneCent | FiveCent | TenCent | Dollar
+    deriving Ord
+
+smallest :: Ord a => [a] -> a
+smallest [] = undefined
+smallest [x] = x
+smallest (x:xs) = min x (smallest xs)
+
+smallest [TenCent, FiveCent, Dollar, OneCent] -- OneCent
+smallest [5,3,10,9]  -- 3
+smallest "adenty"    -- \'a\'
+\end{minted}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Monads}
+\begin{minted}{haskell}
+-- Maybe monad
+safeDiv :: Integral a => a -> a -> Maybe a
+safeDiv x y = guard (y /= 0) >> return (x `div` y)
+
+-- IO monad
+main = do
+    putStrLn "What is your name?"
+    name <- getLine
+    putStrLn ("Nice meeting you " ++ name ++ ".")
+\end{minted}
+\end{frame}
+
+
+\end{document}
