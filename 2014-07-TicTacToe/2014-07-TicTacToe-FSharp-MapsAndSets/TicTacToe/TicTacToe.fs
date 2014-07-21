@@ -40,7 +40,10 @@ module Core =
         wins 
         |> Set.exists (fun win -> win.IsSubsetOf playersSquares)
 
-    let IsDraw = FindPositions None >> Set.isEmpty
+    // Technically this isn't a proper definition of a Draw
+    // A filled board could be a Winning Position
+    // But since we check for a Win First, this works.
+    let IsDraw = Available >> Set.isEmpty
 
     let Opponent = function
         | X -> O
