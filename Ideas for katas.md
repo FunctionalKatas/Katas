@@ -11,3 +11,5 @@ Ideas
 - Implement a Sudoku solver
 
 - Some good suggestions here; perhaps we could get the topic in advance, so we can set up the framework and only have to write core code on the night
+
+- Reinforcement learning; make an agent that learns as it proceeds by the means of getting reward for a right move and punishment for a wrong move
