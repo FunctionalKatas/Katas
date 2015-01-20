@@ -16,10 +16,10 @@ luhn cc = l == 0
   where
     ds = map digit $ reverse cc
     s₁ = sum $ odds ds
-    s₂ = sum $ map f $ evens ds
+    s₂ = sum $ map (f . (*2)) $ evens ds
       where
-        f x | x * 2 > 9 = sum $ map digit $ show $ x * 2
-            | otherwise = x * 2
+        f x | x > 9 = sum $ map digit $ show x
+            | otherwise = x
     l = digit $ last $ show $ s₁ + s₂
 
 main :: IO ()
