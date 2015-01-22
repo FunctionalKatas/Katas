@@ -3,7 +3,12 @@ open Luhn
 
 let Luhn: string->bool =
     let oneTwoCycle = Seq.cycle (seq[1;2])
-    let sumDigits number = if number > 9 then number%9 else number
+
+    let sumDigits = function
+        | 18 -> 9
+        | n when n > 9 -> n%9
+        | n -> n
+
     let isMultipleOf10 x = x % 10 = 0
 
     Seq.map (string >> int) 
