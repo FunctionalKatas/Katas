@@ -1,8 +1,7 @@
 ﻿open System
 open Luhn
 
-let uncurry f (x, y) = f x y
-let sumDigits n = Math.DivRem(n, 10) |> uncurry (+)
+let sumDigits n = Math.DivRem(n, 10) ||> (+)
 let isMultipleOf x y = y % x = 0
 
 let Luhn: string->bool =
