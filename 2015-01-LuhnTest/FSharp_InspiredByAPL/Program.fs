@@ -1,22 +1,17 @@
 ﻿open System
 open Luhn
 
+let uncurry f (x, y) = f x y
+let sumDigits n = Math.DivRem(n, 10) |> uncurry (+)
+let isMultipleOf x y = y % x = 0
+
 let Luhn: string->bool =
-    let oneTwoCycle = Seq.cycle (seq[1;2])
-
-    let sumDigits = function
-        | 18 -> 9
-        | n when n > 9 -> n%9
-        | n -> n
-
-    let isMultipleOf10 x = x % 10 = 0
-
     Seq.map (string >> int) 
     >> Seq.rev
-    >> Seq.map2 (*) oneTwoCycle 
+    >> Seq.map2 (*) (Seq.cycle (seq[1;2])) 
     >> Seq.map sumDigits
     >> Seq.sum
-    >> isMultipleOf10
+    >> isMultipleOf 10
 
 [<EntryPoint>]
 let main argv = 
