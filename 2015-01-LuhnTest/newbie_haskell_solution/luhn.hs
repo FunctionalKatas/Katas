@@ -12,31 +12,28 @@ Given Credit Card number: 49927398716
 -}
 
 import Data.Char
+import Data.List
 
-data Validity = Valid | Invalid deriving Eq
+data Validity = Invalid | Valid deriving Eq
 type CardNumber = String
 
 luhnCheck :: CardNumber -> Validity
 luhnCheck s = 
-    let r = revDigits s
-        (os,es) = oddsAndEvens r
+    let rs = map digitToInt . reverse $ s
+        (os,es) = oddsAndEvens rs
         s1 = sum os
-        s2 = sum $ map sumDigits $ map (*2) es 
+        s2 = sum . map (sumDigits . (*2)) $ es 
     in if (s1 + s2) `mod` 10 == 0 then Valid
        else Invalid
 
-revDigits :: CardNumber -> [Int]
-revDigits s = map digitToInt (reverse s)    
-
 oddsAndEvens :: [Int] -> ([Int],[Int])
-oddsAndEvens is = 
-    let digitsWithIdx = zip is (cycle [1,2])
-        odds = map fst $ filter (\d -> (snd d) == 1) digitsWithIdx
-        evens = map fst $ filter (\d -> (snd d) == 2) digitsWithIdx
-    in (odds,evens)     
+oddsAndEvens ds = 
+    let dsWithFlag = zip ds (cycle [True,False])
+        (osi, esi) = partition (\d -> snd d) dsWithFlag
+    in (map fst osi,map fst esi)     
 
 sumDigits:: Int -> Int
-sumDigits i = sum $ map digitToInt $ show i
+sumDigits = sum . map digitToInt . show
 
 test :: Bool
 test = let testData = ["49927398716", "49927398717", "1234567812345678","1234567812345670"]
