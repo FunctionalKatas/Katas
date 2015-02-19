@@ -11,7 +11,7 @@ let triangle (loves:int, decrement:int) =
                    ptr  (loves-1) (decrement+2 )    
     ptr loves decrement
 
-let boob i =    
+let top i =    
     let halfLoveCount = i / 2
     let rec bo (loves:int) i  =
         match loves > halfLoveCount with 
@@ -21,5 +21,5 @@ let boob i =
                    bo (loves+1) (i-2)
     bo 1 (i-2) 
 
-boob 10
-triangle( 10, 1) 
+top 12
+triangle( 12, 1) 
