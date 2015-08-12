@@ -2,12 +2,12 @@ module PatternMatch where
 
 match :: String -> String -> Bool
 match [] [] = True
-match [] _ = False
 match "*" [] = True
-match _ [] = False
+match "?" [] = True
 match ('*':ps) (w:ws) = match ('*':ps) ws || match ps (w:ws) 
 match ('?':ps) (w:ws) = match ps ws || match ps (w:ws)
 match (p:ps) (w:ws) = p == w && match ps ws
+match _ = False
 
 matchInDict :: String -> [String] -> [String]
 matchInDict pat = filter (match pat)
