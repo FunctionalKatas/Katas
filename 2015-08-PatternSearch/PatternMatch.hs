@@ -7,7 +7,7 @@ match "?" [] = True
 match ('*':ps) (w:ws) = match ('*':ps) ws || match ps (w:ws) 
 match ('?':ps) (w:ws) = match ps ws || match ps (w:ws)
 match (p:ps) (w:ws) = p == w && match ps ws
-match _ = False
+match _ _ = False
 
 matchInDict :: String -> [String] -> [String]
 matchInDict pat = filter (match pat)
