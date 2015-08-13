@@ -36,8 +36,8 @@
 ; )
 
 ;(comment
- (pat-match (make-regex "hello*") "hello world")
- (pat-match (make-regex "helx*") "hello world")
+ (re-matches (make-regex "hello*") "hello world")
+ (re-matches (make-regex "helx*") "hello world")
 ;)
 
 ;  (:require [clojure.core.match :refer [match]])
