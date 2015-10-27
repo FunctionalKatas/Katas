@@ -10,6 +10,7 @@ Given Credit Card number: 49927398716
 • which, as it ends in zero, means that 49927398716 passes the Luhn test
 -}
 import Data.Vect
+import Debug.Trace
 
 data Validity = Valid | Invalid
 instance Eq Validity where
@@ -17,23 +18,32 @@ instance Eq Validity where
   Invalid == Invalid = True
   _ == _ = False
 
-CardNumber : Type
-CardNumber = Vect 11 Char
+AllowableCardDigit : Type
+AllowableCardDigit = Fin 10
+
+CardNumber : Nat -> Type
+CardNumber n = Vect n AllowableCardDigit
 
 toDigit : Char -> Int
-toDigit c = ord c - ord '0'
+toDigit c = ord c - ord '0' -- Can't be the safest way to do this!
 
-zwi : CardNumber -> List (Int,Char)
-zwi cs = zip [1..11] $ toList cs
+toAllowableCardDigit : Char -> AllowableCardDigit
+toAllowableCardDigit c = the AllowableCardDigit (fromNat (toNat $ toDigit c))
 
-oddDigits : CardNumber -> List Int
-oddDigits xs = map (toDigit . snd) $ filter (\c => ((fst c) `mod` 2) /= 0 ) (zwi xs)
+zipWithIndex : Vect n t -> Vect n (Nat,t)
+zipWithIndex cs = zip (map finToNat range) cs
 
-calc_s1 : CardNumber -> Int
-calc_s1  = sum . oddDigits
+pred : (Nat, t) -> Bool
+pred (a,b) = ((toIntNat a) `mod` 2) == 0
 
-evenDigits : CardNumber -> List Int
-evenDigits xs = map (toDigit . snd) $ filter (\c => ((fst c) `mod` 2) == 0 ) (zwi xs)
+odds : CardNumber n -> (p : Nat ** Vect p (Nat,AllowableCardDigit))
+odds cn =  filter pred (zipWithIndex cn)
+
+evens : CardNumber n -> (p : Nat ** Vect p (Nat,AllowableCardDigit))
+evens cn =  filter (not . pred) (zipWithIndex cn)
+
+calc_s1 : (CardNumber n) -> Nat
+calc_s1 cn = sum $ map (finToNat . snd) $  getProof $ odds cn
 
 sumDigits : Int -> Int
 sumDigits = sum . map toDigit . unpack . show
@@ -41,17 +51,19 @@ sumDigits = sum . map toDigit . unpack . show
 sumAllDigits : List Int -> List Int
 sumAllDigits = map sumDigits
 
-calc_s2 : CardNumber -> Int
-calc_s2 = sum . sumAllDigits . map (*2) . evenDigits
+calc_s2 : (CardNumber n) -> Int
+calc_s2 cn = sum $ sumAllDigits . toList $ map ((*2) . toIntNat . finToNat . snd)  $ getProof $ evens cn
 
-luhnCheck : CardNumber -> Validity
-luhnCheck x = if (((s1 + s2) `modInt` 10) == 0) then Valid else Invalid
-  where r:CardNumber  = reverse x
-        s1 = calc_s1 x
-        s2 = calc_s2 x
+luhnCheck : (CardNumber n) -> Validity
+luhnCheck {n} x = if (((s1 + s2) `modInt` 10) == 0) then Valid else Invalid
+  where s1 = toIntNat $ calc_s1 $ reverse x
+        s2 = calc_s2 $ reverse x
+
+aCard : CardNumber 11
+aCard = fromList $ map toAllowableCardDigit $ unpack "49927398716"
 
 test : Validity
-test = luhnCheck $ fromList $ unpack "49927398716"
+test = luhnCheck $ fromList $ map toAllowableCardDigit $ unpack "49927398716"
 
 test2 : Validity
-test2 = luhnCheck $ fromList $ unpack "49927398715"
+test2 = luhnCheck $ fromList $ map toAllowableCardDigit $ unpack "49927398715"
