@@ -1,22 +1,12 @@
 import Data.List
 import Data.Ord
-
-primes :: [Integer]
-primes = 2: 3: sieve (tail primes) [5,7..]
- where 
-  sieve (p:ps) xs = h ++ sieve ps [x | x <- t, x `rem` p /= 0]  
-                  where (h,~(_:t)) = span (< p*p) xs
-
+import Data.Numbers.Primes -- outsource the hard bit to someone else!
 
 longestPrimeSumOfConsecutivePrimes :: Integer -> (Integer,Integer)
 longestPrimeSumOfConsecutivePrimes maxPrime = 
     let primesBelowLimit = takeWhile (<maxPrime) primes
         upperBoundOfTerms = length $ takeWhile (<maxPrime) $ scanl (+) 0 primesBelowLimit
     in  go maxPrime primesBelowLimit (take upperBoundOfTerms primesBelowLimit) (0,0)
-
-isPrime x = not $ any divisible $ takeWhile notTooBig [2..] where
-     divisible y = x `mod`y == 0
-     notTooBig y = y*y <= x
 
 go :: Integer -> [Integer] -> [Integer] -> (Integer,Integer) -> (Integer,Integer)
 go maxPrime allPrimes considering bestSoFar = 
