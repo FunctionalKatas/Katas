@@ -1,22 +1,29 @@
-import Data.List
-import Data.Ord
 import Data.Numbers.Primes -- outsource the hard bit to someone else!
 
-longestPrimeSumOfConsecutivePrimes :: Integer -> (Integer,Integer)
-longestPrimeSumOfConsecutivePrimes maxPrime = 
-    let primesBelowLimit = takeWhile (<maxPrime) primes
-        upperBoundOfTerms = length $ takeWhile (<maxPrime) $ scanl (+) 0 primesBelowLimit
-    in  go maxPrime primesBelowLimit (take upperBoundOfTerms primesBelowLimit) (0,0)
+type Prime = Integer   
+type SequenceLength = Integer
 
-go :: Integer -> [Integer] -> [Integer] -> (Integer,Integer) -> (Integer,Integer)
-go maxPrime allPrimes considering bestSoFar = 
-    let b = filter (\idxEl -> isPrime (snd idxEl) && snd idxEl<maxPrime) $ 
-                zip [0..] $ 
-                scanl (+) 0 considering
-        best = if null b then bestSoFar else maximumBy (comparing fst) b
-        newBestSoFar = if fst bestSoFar > fst best then bestSoFar else best        
-    in if toInteger (length considering) > fst newBestSoFar then go maxPrime allPrimes (tail considering) newBestSoFar
-       else newBestSoFar
+longestPrimeSumOfConsecutivePrimes :: Integer -> Prime
+longestPrimeSumOfConsecutivePrimes primeBelow = 
+    let upperBoundOfTerms = length $ takeWhile (<primeBelow) $ scanl (+) 0 primes 
+    in  snd $ go primeBelow (take upperBoundOfTerms primes) (0,0)
 
-test = (longestPrimeSumOfConsecutivePrimes 100 == (6,41)) &&
-       (longestPrimeSumOfConsecutivePrimes 1000 == (21,953))
+go :: Integer -> [Prime] -> (SequenceLength,Prime) -> (SequenceLength,Prime)
+go primeBelow candidatesPrimes previousBestSoFar 
+    | primesLeftToCheck > fst bestSoFar = go primeBelow (tail candidatesPrimes) bestSoFar       
+    | otherwise = bestSoFar
+        where candidate = last $
+                          filter (isPrime.snd) $
+                          takeWhile ((<primeBelow).snd) $
+                          zip [0..] $ 
+                          scanl (+) 0 candidatesPrimes
+              bestSoFar 
+                | fst candidate > fst previousBestSoFar = candidate
+                | otherwise = previousBestSoFar
+              primesLeftToCheck = toInteger (length candidatesPrimes)-1  
+
+test = (longestPrimeSumOfConsecutivePrimes 100 == 41) &&
+       (longestPrimeSumOfConsecutivePrimes 1000 == 953)
+
+answer = longestPrimeSumOfConsecutivePrimes 1000000
+
